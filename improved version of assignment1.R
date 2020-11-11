@@ -189,7 +189,7 @@ dfbryozoaUSA1 <- dfbryozoa.subAusUSA[dfbryozoa.subAusUSA$country == "United Stat
 ggplot(dfbryozoaUSA1) +
   aes(x = reorder(species_name, -n), y = n) +
   geom_bar(position = "dodge", stat = "identity", colour = "black", fill = "red") +
-  geom_text(aes(label = n), vjust = 1, hjust = -0.3, size = 4, nudge_x = 0.60) +
+  geom_text(aes(label = n), vjust = 1, hjust = -0.3, size = 4, nudge_x = 0.65) +
   labs(title = "Species Frequency of Bryozoa in the United States", x = "Species", y = "Frequency") +
   theme(axis.text.x = element_text(hjust = 0.5)) +
   coord_flip()
@@ -229,5 +229,29 @@ class(df.species.sp.US)
 rarefac.curv.US <- rarecurve(df.species.sp.US, xlab = "Individuals", ylab = "No. of species", main ='Rarefaction curve for species of United States', col.main = 'blue', col.lab = 'red')
 
 #By looking at the shape of this curve we can say that after 300 individuals on the x-axis it becomes considerably linear and might be nearing plateau, which means that new discoveries can be made but asignificant amount and new samples do have the potential to reveal a bit more but not to a great extent.Therefore, we can say that region of United States is well sampled as compared to Australia.
+
+#####Additional analysis. 
+#Create a variable that subsets the original dataframe and includes country, latitude, and longitude. 
+dfbryozoa.sub2 <- dfbryozoa[, c("country", "lat", "lon")]
+
+#Create a new variable that indexes country on the dataframe subset, and makes the variables exactly equal to Australia OR the Unites States.
+dfbyozoaAusUSAGeo <- dfbryozoa.sub2[dfbryozoa.sub2$country == "Australia" | dfbryozoa.sub2$country == "United States", ]
+
+#Filter out NAs from the lat and lon values.
+AusUSABryozoa <- dfbyozoaAusUSAGeo %>%
+  filter(!is.na(lat)) %>%
+  filter(!is.na(lon))
+
+#Use a summary to see the min and max values of longitude and latitude to make appropriate scales for the plot.
+summary(AusUSABryozoa)
+
+#Plot longitudes and latitudes of Bryozoa collections points from Australia and the United States.
+ggplot(AusUSABryozoa) +
+  aes(x = lon, y = lat, colour = country, shape = country) +
+  geom_point(stat = "identity") +
+  xlim(c(-180, 190)) +
+  ylim(c(-70, 65)) +
+  labs(title = "Longitude vs. Latitude of Sample collection of Bryozoa from Australia and the United States", x = "Longitude", y = "Latitude")
+
 
 #Conclusion: The above analysis does not directly support the hypothesis that Australia is has less diversity of Bryozoa species due to changes Southern Ocean environment in terms of like physical disturbance, seasonal flux etc, although Ocean acidification is a concern for calcifying organisms like bryozoa but not only this there can be lot of factors that contribute towards low biodiversity of benthnic (bryozoa) species in Australia. Furthermore, it is also calculated that which region is well sampled and it shows that United States ismore well sampled as compared to Australia and lot of more sampling is required in Australia for biodiversity analysis. 
