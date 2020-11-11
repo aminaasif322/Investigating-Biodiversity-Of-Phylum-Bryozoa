@@ -9,6 +9,12 @@
 library("tidyverse")
 #install.package('vegan')
 library('vegan')
+#install.packages("ggplot2")
+library("ggplot2")
+#install.packages("plyr")
+library("plyr")
+#install.packages("rworldmap")
+library(rworldmap)
 
 #To download data directly into R from BOLD following command is used:
 dfbryozoa <- read_tsv(file ="http://www.boldsystems.org/index.php/API_Public/combined?taxon=bryozoa&format=tsv")
@@ -17,7 +23,7 @@ dfbryozoa <- read_tsv(file ="http://www.boldsystems.org/index.php/API_Public/com
 
 View(dfbryozoa)
 
-#Data of all types must have some characteristics. For analysis we must explore some of thecharacteristics like which type of data is this and for this we will look into class of data.
+#Data of all types must have some characteristics. For analysis we must explore some of the characteristics like which type of data is this and for this we will look into class of data.
 
 class(dfbryozoa)
 
@@ -104,7 +110,6 @@ class(bryozoa.aus.na)
 bryozoa.div.aus <- (dfbryozoa.australia$species_name)
 bryozoa.div.aus1 <- (na.omit(bryozoa.div.aus))
 bryozoa.div.ausT <- table(bryozoa.div.aus1)
-
 diversity(bryozoa.div.ausT, index = 'shannon')
 
 #It gives the abundance of species from what was sampled from Australia. Total number of species are 14 and the shannon diversity index of the species sampled in Australia is 1.367.In addition to this and to make this result more logical in terms of comparison of biodiversity, I am converting this value of shannon index into effective number of species(ENS) and for that I am using function exp()
@@ -122,7 +127,6 @@ length(bryozoa.US.1)
 bryozoa.US.2 <- unique(na.omit(bryozoa.US.1))
 length(bryozoa.US.2)
 class(bryozoa.US.2)
-
 #This tells us that if we look at the data of US then we came to know that there are 67 total unique species among the collected samples and after removing NA it becomes 66.
 
 #Now we will do further analysis. I have created an object 'bryozoa.div.us' which will contain only species analysed from US So, I have created an object 'bryozoa.div.us1' in which NA's are removed and then diversity is calculated.
@@ -132,6 +136,7 @@ bryozoa.div.usT <- table(bryozoa.div.us1)
 sum(bryozoa.div.usT)
 
 diversity(bryozoa.div.usT,index = 'shannon')
+
 #It gives the abundance of species from what was sampled from United States. Total number of species are 66 and the shannon diversity index of the species sampled in US is 2.679 which shows that United States have rich biodiversity as compared to australia. Moreover, to make this result more logical in terms of comparison of biodiversity, I am converting this value of shannon index into effective number of species(ENS) and for that I am using function exp()
 exp(2.679)
 #It shows value 14, which means that a community with Shannon index of 2.679 is as diverse as a community with 14 equally common species.
@@ -178,9 +183,4 @@ rarefac.curv.US <- rarecurve(df.species.sp.US, xlab = "Individuals", ylab = "No.
 
 #By looking at the shape of this curve we can say that after 300 individuals on the x-axis it becomes considerably linear and might be nearing plateau, which means that new discoveries can be made but asignificant amount and new samples do have the potential to reveal a bit more but not to a great extent.Therefore, we can say that region of United States is well sampled as compared to Australia.
 
-
 #Conclusion: The above analysis does not directly support the hypothesis that Australia is has less diversity of Bryozoa species due to changes Southern Ocean environment in terms of like physical disturbance, seasonal flux etc, although Ocean acidification is a concern for calcifying organisms like bryozoa but not only this there can be lot of factors that contribute towards low biodiversity of benthnic (bryozoa) species in Australia. Furthermore, it is also calculated that which region is well sampled and it shows that United States ismore well sampled as compared to Australia and lot of more sampling is required in Australia for biodiversity analysis. 
-
-
-
-
