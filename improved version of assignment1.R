@@ -146,12 +146,10 @@ class(bryozoa.US.2)
 #This tells us that if we look at the data of US then we came to know that there are 67 total unique species among the collected samples and after removing NA it becomes 66.
 
 #Now we will do further analysis. I have created an object 'bryozoa.div.us' which will contain only species analysed from US So, I have created an object 'bryozoa.div.us1' in which NA's are removed and then diversity is calculated.
-bryozoa.div.us <- (bryozoa.US$species_name)
-bryozoa.div.us1 <- (na.omit(bryozoa.div.us))
-bryozoa.div.usT <- table(bryozoa.div.us1)
-sum(bryozoa.div.usT)
 
-diversity(bryozoa.div.usT,index = 'shannon')
+#Use created function ShanIndex to reduce the amount of code. Simplifies script for repeating blocks of code.
+ShanIndex(bryozoa.US$species_name)
+
 
 #It gives the abundance of species from what was sampled from United States. Total number of species are 66 and the shannon diversity index of the species sampled in US is 2.679 which shows that United States have rich biodiversity as compared to australia. Moreover, to make this result more logical in terms of comparison of biodiversity, I am converting this value of shannon index into effective number of species(ENS) and for that I am using function exp()
 exp(2.679)
