@@ -251,7 +251,8 @@ ggplot(AusUSABryozoa) +
   geom_point(stat = "identity") +
   xlim(c(-180, 190)) +
   ylim(c(-70, 65)) +
-  labs(title = "Longitude vs. Latitude of Sample collection of Bryozoa from Australia and the United States", x = "Longitude", y = "Latitude")
+  labs(title = "Longitude vs. Latitude of Sample collection of Bryozoa from Australia and the United States", x = "Longitude", y = "Latitude") +
+  guides(colour = guide_legend("Country"), shape = guide_legend("Country"))
 
 #Create new variable that creates a world map. This map will help clarify what the scatterplot shows. 
 MapPlot <- getMap(resolution = "low")
