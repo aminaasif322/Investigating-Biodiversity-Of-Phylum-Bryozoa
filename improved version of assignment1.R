@@ -157,6 +157,7 @@ ggplot(dfbryozoaAus1) +
 
 #Now I will create object to analyze that how much unique no of species are there in the data collected from United States.
 bryozoa.US <- filter(dfbryozoa.sub, country %in% c('United States'))
+class(bryozoa.US)
 
 #Use created function UniqueTotal to find the number of unique species in the United States. 
 UniqueTotal(bryozoa.US$species_name)
