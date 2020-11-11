@@ -253,5 +253,11 @@ ggplot(AusUSABryozoa) +
   ylim(c(-70, 65)) +
   labs(title = "Longitude vs. Latitude of Sample collection of Bryozoa from Australia and the United States", x = "Longitude", y = "Latitude")
 
+#Create new variable that creates a world map. This map will help clarify what the scatterplot shows. 
+MapPlot <- getMap(resolution = "low")
+#Plot the world map.
+plot(MapPlot, main = "Collection Points of Bryozoa in Australia and the United States") 
+#Add longitude and latitude points to the map. 
+points(AusUSABryozoa$lon, AusUSABryozoa$lat, pch = 21, col = "red", bg = "red", cex = .8)
 
 #Conclusion: The above analysis does not directly support the hypothesis that Australia is has less diversity of Bryozoa species due to changes Southern Ocean environment in terms of like physical disturbance, seasonal flux etc, although Ocean acidification is a concern for calcifying organisms like bryozoa but not only this there can be lot of factors that contribute towards low biodiversity of benthnic (bryozoa) species in Australia. Furthermore, it is also calculated that which region is well sampled and it shows that United States ismore well sampled as compared to Australia and lot of more sampling is required in Australia for biodiversity analysis. 
