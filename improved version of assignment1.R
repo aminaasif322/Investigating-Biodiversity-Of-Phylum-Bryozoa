@@ -105,9 +105,9 @@ class(dfbryozoa.sp.rich)
 dfbryozoa.f.aus <- filter(dfbryozoa.sub, country %in% c('Australia'))
 
 #Now I will create an object 'bryozoa.aus.u.s' and will use unique function which will separate out unique species only.
-#Use created function UniqueTotal to find the total unique species names in the data set dfbryozoa.f.aus and assign it to a new variable called bryozoa.aus.u.s. This function reduced 5 lines of code to 2 lines of code.
-bryozoa.aus.u.s <- UniqueTotal(dfbryozoa.f.aus$species_name)
-bryozoa.aus.u.s
+#Use created function UniqueTotal to find the total unique species names in the data set dfbryozoa.f.aus. This function reduced 5 lines of code to 1 lines of code.
+UniqueTotal(dfbryozoa.f.aus$species_name)
+
 
 #Above analysis shows that there are 14 unique species.
 
