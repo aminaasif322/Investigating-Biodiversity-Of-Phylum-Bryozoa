@@ -178,8 +178,22 @@ exp(2.679)
 
 ##Now we will plot number of species of United States against their frequency.
 
-hist(bryozoa.div.usT, xlab = 'Frequency', ylab = 'No. of species' , main = 'Histogram of species of United
-States', border = 'red', col = 'light blue', breaks = 8)
+#Creating an advanced figure using ggplot to show the species frequency.
+
+#Create a variable that subsets only the United States. Group the data by country and count the frequency of each species name. 
+dfbryozoaUSA1 <- dfbryozoa.subAusUSA[dfbryozoa.subAusUSA$country == "United States", ] %>%
+  group_by(country) %>%
+  dplyr::count(species_name)
+
+#Plot the species frequency in the United states using ggplot.
+ggplot(dfbryozoaUSA1) +
+  aes(x = reorder(species_name, -n), y = n) +
+  geom_bar(position = "dodge", stat = "identity", colour = "black", fill = "red") +
+  geom_text(aes(label = n), vjust = 1, hjust = -0.3, size = 4, nudge_x = 0.60) +
+  labs(title = "Species Frequency of Bryozoa in the United States", x = "Species", y = "Frequency") +
+  theme(axis.text.x = element_text(hjust = 0.5)) +
+  coord_flip()
+
 #The above histogram shows near about 60 species are found in the range of 1-50, but only two species'Watersipora subtorquata' found 85 times and only 'Bugula neritina' found almost 226 times.
 
 ###Now I will construct rarefaction curves for species of both Australia and US and will do comparison between them that which region is well sampled.
