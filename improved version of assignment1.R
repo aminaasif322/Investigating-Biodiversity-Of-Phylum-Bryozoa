@@ -178,7 +178,6 @@ view(df.species.sp.US)
 class(df.species.sp.US)
 
 #Now rarefaction curve will be generated for species of US.
-
 rarefac.curv.US <- rarecurve(df.species.sp.US, xlab = "Individuals", ylab = "No. of species", main ='Rarefaction curve for species of United States', col.main = 'blue', col.lab = 'red')
 
 #By looking at the shape of this curve we can say that after 300 individuals on the x-axis it becomes considerably linear and might be nearing plateau, which means that new discoveries can be made but asignificant amount and new samples do have the potential to reveal a bit more but not to a great extent.Therefore, we can say that region of United States is well sampled as compared to Australia.
