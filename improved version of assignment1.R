@@ -67,7 +67,7 @@ UniqueTotal <- function(df) {
   return(result)
 }
 
-#Use function to find the total unique species names in the data set df.bryozoa.sub. This function reduced 6 lines of code (lines 56-61) to 1 line of code)
+#Use function to find the total unique species names in the data set df.bryozoa.sub. This function reduced 6 lines of code to 1 line of code)
 UniqueTotal(dfbryozoa.sub$species_name)
 
 #It tells that total number of species in this whole data frame are 240.
