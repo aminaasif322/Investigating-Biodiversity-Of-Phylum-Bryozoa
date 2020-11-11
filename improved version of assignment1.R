@@ -1,5 +1,5 @@
 
-#Introduction:- From the phylum of aquatic invertebrate animals, the following project explored phylum Bryozoa. The project is designed to investigate biodiversity. The idea was inspired from the article (A. J. CONSTABLE et al.2014) and It compares the biodiversity between Australia and United States and the idea is to hypothesize that Southern Ocean has less diverse species of Benthos because of climate change and ocean acidification and bryozoan species are largely effected by ice scour in Southern Ocean including region of Australia. Not only this but benthic predators that invade the Antarctic Peninsula effected benthnic species(B. Aronson. 2007) and evidences have been found that climate change has more adverse effect on benthnic species than predators(Gutt et al. 2014). In this project it is also compared which region among US and Australia are well sampled.
+#Introduction:- From the phylum of aquatic invertebrate animals, the following project explored the phylum Bryozoa. The project is designed to investigate biodiversity. The idea was inspired from the article (A. J. CONSTABLE et al.2014) and It compares the biodiversity between Australia and United States and the idea is to hypothesize that Southern Ocean has less diverse species of Benthos because of climate change and ocean acidification and bryozoan species are largely effected by ice scour in Southern Ocean including region of Australia. Not only this but benthic predators that invade the Antarctic Peninsula effected benthnic species(B. Aronson. 2007) and evidences have been found that climate change has more adverse effect on benthnic species than predators(Gutt et al. 2014). In this project it is also compared which region among US and Australia are well sampled.
 
 #Detailed R script:
 #### This project will explore some questions related to biodiversity by using the data obtained from BOLD from the phylum Bryozoa.
@@ -109,9 +109,9 @@ dfbryozoa.f.aus <- filter(dfbryozoa.sub, country %in% c('Australia'))
 bryozoa.aus.u.s <- UniqueTotal(dfbryozoa.f.aus$species_name)
 bryozoa.aus.u.s
 
-#Above analysis shows that Initially there were 15 unique no of species but after removing NA it becomes 14.
+#Above analysis shows that there are 14 unique species.
 
-#Now we will do further analysis. I have created an object 'bryozoa.div.aus' which will contain only species analysed from Australia So, I have created an object 'bryozoa.div.aus1' in which NA's are removed and then diversity is calculated.
+#Now we will do further analysis by calculating the Shannon index of Australia. 
 
 #Creating a function that will return the Shannon index. This will reduce the amount of code when it is used later in the script. 
 ShanIndex <- function(df){
@@ -153,18 +153,17 @@ ggplot(dfbryozoaAus1) +
   theme(axis.text.x = element_text(hjust = 0.5)) +
   coord_flip()
 
-#The histogram shows that 10-12 no of species are found in the range of 0-10 but (only two species 'Mucropetraliella ellerii' found 51 times and only 'Bugula neritina' found 94 times).
+#The barplot shows that most species are found in the range of 0-10, except Mucropetraliella ellerii which was found 51 times and Bugula neritina which was found 94 times.
 
 #Now I will create object to analyze that how much unique no of species are there in the data collected from United States.
 bryozoa.US <- filter(dfbryozoa.sub, country %in% c('United States'))
-bryozoa.US.1 <- unique(bryozoa.US$species_name)
-length(bryozoa.US.1)
-bryozoa.US.2 <- unique(na.omit(bryozoa.US.1))
-length(bryozoa.US.2)
-class(bryozoa.US.2)
-#This tells us that if we look at the data of US then we came to know that there are 67 total unique species among the collected samples and after removing NA it becomes 66.
 
-#Now we will do further analysis. I have created an object 'bryozoa.div.us' which will contain only species analysed from US So, I have created an object 'bryozoa.div.us1' in which NA's are removed and then diversity is calculated.
+#Use created function UniqueTotal to find the number of unique species in the United States. 
+UniqueTotal(bryozoa.US$species_name)
+
+#This tells us that if we look at the data of US that there are 66 total unique species.
+
+#Now we will do further analysis by looking at the Shannon index of species in the United States.
 
 #Use created function ShanIndex to reduce the amount of code. Simplifies script for repeating blocks of code.
 ShanIndex(bryozoa.US$species_name)
@@ -194,7 +193,7 @@ ggplot(dfbryozoaUSA1) +
   theme(axis.text.x = element_text(hjust = 0.5)) +
   coord_flip()
 
-#The above histogram shows near about 60 species are found in the range of 1-50, but only two species'Watersipora subtorquata' found 85 times and only 'Bugula neritina' found almost 226 times.
+#The above barplot shows that most species have a frequency of 1-50, except Watersipora subtorquata which was found 85 times and Bugula neritina which was found 226 times.
 
 ###Now I will construct rarefaction curves for species of both Australia and US and will do comparison between them that which region is well sampled.
 
