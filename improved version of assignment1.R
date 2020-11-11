@@ -133,7 +133,26 @@ exp(1.3677)
 #It shows value 3, which means that a community with shannon index of 1.3677 is as diverse as a community with 3 equally common species. 
 
 #Now we will plot number of species of Australia against their frequency.
-hist(bryozoa.div.ausT, xlab = 'Frequency', ylab = 'No. of species' , main = 'Histogram of species of Australia', border = 'red', col = 'light blue', breaks = 10)
+
+#Create an advanced figure using ggplot to make a barplot representing frequency of species.
+
+#Create a variable that subsets species names and countries while filtering out NA values. 
+dfbryozoa.subAusUSA <- dfbryozoa.sub[!is.na(dfbryozoa.sub$species_name) & !is.na(dfbryozoa.sub$country), ]
+
+##Create a variable that subsets only Australia. Group the data by country and count the frequency of each species name.
+dfbryozoaAus1 <- dfbryozoa.subAusUSA[dfbryozoa.subAusUSA$country == "Australia", ] %>%
+  group_by(country) %>%
+  dplyr::count(species_name)
+
+#Plot the species frequency for Australia using ggplot.
+ggplot(dfbryozoaAus1) +
+  aes(x = reorder(species_name, -n), y = n,) +
+  geom_bar(position = "dodge", stat = "identity", colour = "red", fill = "lightblue") +
+  geom_text(aes(label = n), vjust = 1, hjust = -0.3, size = 4, nudge_x = 0.20) +
+  labs(title = "Species Frequency of Bryozoa in Australia", x = "Species", y = "Frequency") +
+  theme(axis.text.x = element_text(hjust = 0.5)) +
+  coord_flip()
+
 #The histogram shows that 10-12 no of species are found in the range of 0-10 but (only two species 'Mucropetraliella ellerii' found 51 times and only 'Bugula neritina' found 94 times).
 
 #Now I will create object to analyze that how much unique no of species are there in the data collected from United States.
