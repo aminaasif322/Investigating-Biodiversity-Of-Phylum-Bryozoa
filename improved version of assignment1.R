@@ -57,12 +57,19 @@ table(dfbryozoa.sub$country)
 sort(table(dfbryozoa.sub$country), decreasing = TRUE)[1:4]
 
 ##To get great insight into data in terms of no of species we will calculate total no of species in this data frame
-bryozoa.total.sp <- dfbryozoa.sub$species_name
-bryozoa.total.sp1 <- (na.omit(bryozoa.total.sp))
-bryozoa.total.spT <- table(bryozoa.total.sp1)
-sum(bryozoa.total.spT)
-total.species <- (specnumber (bryozoa.total.spT))
-total.species
+
+#Create a function that returns the total number of unique species for a specified dataset. 
+UniqueTotal <- function(df) {
+  #The function will take an inputted data frame, filter out NA values, take unique values (or names) and return the length of unique variables. 
+  #df = data frame. Use data frame with an extracted / specified column. 
+  result <- length(unique(na.omit(df)))
+  #Return the result to the console.
+  return(result)
+}
+
+#Use function to find the total unique species names in the data set df.bryozoa.sub. This function reduced 6 lines of code (lines 56-61) to 1 line of code)
+UniqueTotal(dfbryozoa.sub$species_name)
+
 #It tells that total number of species in this whole data frame are 240.
 
 #I have chosen to focus on two regions to compare biodiversity. These are United States and Australia. So, I would create an object 'dfbryozoa.countries' and filter data of only these two countries.
