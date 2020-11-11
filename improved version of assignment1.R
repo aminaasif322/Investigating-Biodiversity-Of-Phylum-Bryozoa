@@ -112,10 +112,21 @@ bryozoa.aus.u.s
 #Above analysis shows that Initially there were 15 unique no of species but after removing NA it becomes 14.
 
 #Now we will do further analysis. I have created an object 'bryozoa.div.aus' which will contain only species analysed from Australia So, I have created an object 'bryozoa.div.aus1' in which NA's are removed and then diversity is calculated.
-bryozoa.div.aus <- (dfbryozoa.australia$species_name)
-bryozoa.div.aus1 <- (na.omit(bryozoa.div.aus))
-bryozoa.div.ausT <- table(bryozoa.div.aus1)
-diversity(bryozoa.div.ausT, index = 'shannon')
+
+#Creating a function that will return the Shannon index. This will reduce the amount of code when it is used later in the script. 
+ShanIndex <- function(df){
+  #Create a variable that removes NAs from the data, and organizes that data into a table.
+  #df = data frame. Use data frame with an extracted / specified column.
+  answer <- table((na.omit(df))) %>%
+    #use the diversity function from the package "vegan" to create a shannon index for the data frame of interest. 
+    diversity(df, index = 'shannon')
+  #Return the answer the the console.
+  return(answer)
+}
+
+#Use created function. Gives the same answer as the original code. 
+ShanIndex(dfbryozoa.australia$species_name)
+
 
 #It gives the abundance of species from what was sampled from Australia. Total number of species are 14 and the shannon diversity index of the species sampled in Australia is 1.367.In addition to this and to make this result more logical in terms of comparison of biodiversity, I am converting this value of shannon index into effective number of species(ENS) and for that I am using function exp()
 exp(1.3677)
