@@ -147,7 +147,7 @@ dfbryozoaAus1 <- dfbryozoa.subAusUSA[dfbryozoa.subAusUSA$country == "Australia",
 #Plot the species frequency for Australia using ggplot.
 ggplot(dfbryozoaAus1) +
   aes(x = reorder(species_name, -n), y = n,) +
-  geom_bar(position = "dodge", stat = "identity", colour = "red", fill = "lightblue") +
+  geom_bar(position = "dodge", stat = "identity", colour = "black", fill = "orange") +
   geom_text(aes(label = n), vjust = 1, hjust = -0.3, size = 4, nudge_x = 0.20) +
   labs(title = "Species Frequency of Bryozoa in Australia", x = "Species", y = "Frequency") +
   theme(axis.text.x = element_text(hjust = 0.5)) +
