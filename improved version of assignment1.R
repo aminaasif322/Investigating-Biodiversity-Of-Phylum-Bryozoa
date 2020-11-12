@@ -1,5 +1,5 @@
 
-#Introduction:- From the phylum of aquatic invertebrate animals, the following project explored phylum Bryozoa. The project is designed to investigate biodiversity. The idea was inspired from the article (A. J. CONSTABLE et al.2014) and It compares the biodiversity between Australia and United States and the idea is to hypothesize that Southern Ocean has less diverse species of Benthos because of climate change and ocean acidification and bryozoan species are largely effected by ice scour in Southern Ocean including region of Australia. Not only this but benthic predators that invade the Antarctic Peninsula effected benthnic species(B. Aronson. 2007) and evidences have been found that climate change has more adverse effect on benthnic species than predators(Gutt et al. 2014). In this project it is also compared which region among US and Australia are well sampled.
+#Introduction:- From the phylum of aquatic invertebrate animals, the following project explored the phylum Bryozoa. The project is designed to investigate biodiversity. The idea was inspired from the article (A. J. CONSTABLE et al.2014) and It compares the biodiversity between Australia and United States and the idea is to hypothesize that Southern Ocean has less diverse species of Benthos because of climate change and ocean acidification and bryozoan species are largely effected by ice scour in Southern Ocean including region of Australia. Not only this but benthic predators that invade the Antarctic Peninsula effected benthnic species(B. Aronson. 2007) and evidences have been found that climate change has more adverse effect on benthnic species than predators(Gutt et al. 2014). In this project it is also compared which region among US and Australia are well sampled.
 
 #Detailed R script:
 #### This project will explore some questions related to biodiversity by using the data obtained from BOLD from the phylum Bryozoa.
@@ -9,6 +9,12 @@
 library("tidyverse")
 #install.package('vegan')
 library('vegan')
+#install.packages("ggplot2")
+library("ggplot2")
+#install.packages("plyr")
+library("plyr")
+#install.packages("rworldmap")
+library(rworldmap)
 
 #To download data directly into R from BOLD following command is used:
 dfbryozoa <- read_tsv(file ="http://www.boldsystems.org/index.php/API_Public/combined?taxon=bryozoa&format=tsv")
@@ -17,7 +23,7 @@ dfbryozoa <- read_tsv(file ="http://www.boldsystems.org/index.php/API_Public/com
 
 View(dfbryozoa)
 
-#Data of all types must have some characteristics. For analysis we must explore some of thecharacteristics like which type of data is this and for this we will look into class of data.
+#Data of all types must have some characteristics. For analysis we must explore some of the characteristics like which type of data is this and for this we will look into class of data.
 
 class(dfbryozoa)
 
@@ -38,7 +44,7 @@ dim(dfbryozoa)
 
 #To see that which country has the most barcoded data. We will use following command using piping.
 dfbryozoa %>%
-  count(country, sort = TRUE)
+  dplyr::count(country, sort = TRUE)
 
 #It shows list of countries along with detail that which country have the most barcoded data.
 #Now I have created a new object 'dfbryozoa.sub' to look into data of dfbryozoa and isolate the following details from the whole data.
@@ -51,12 +57,19 @@ table(dfbryozoa.sub$country)
 sort(table(dfbryozoa.sub$country), decreasing = TRUE)[1:4]
 
 ##To get great insight into data in terms of no of species we will calculate total no of species in this data frame
-bryozoa.total.sp <- dfbryozoa.sub$species_name
-bryozoa.total.sp1 <- (na.omit(bryozoa.total.sp))
-bryozoa.total.spT <- table(bryozoa.total.sp1)
-sum(bryozoa.total.spT)
-total.species <- (specnumber (bryozoa.total.spT))
-total.species
+
+#Create a function that returns the total number of unique species for a specified dataset. 
+UniqueTotal <- function(df) {
+  #The function will take an inputted data frame, filter out NA values, take unique values (or names) and return the length of unique variables. 
+  #df = data frame. Use data frame with an extracted / specified column. 
+  result <- length(unique(na.omit(df)))
+  #Return the result to the console.
+  return(result)
+}
+
+#Use function to find the total unique species names in the data set df.bryozoa.sub. This function reduced 6 lines of code to 1 line of code)
+UniqueTotal(dfbryozoa.sub$species_name)
+
 #It tells that total number of species in this whole data frame are 240.
 
 #I have chosen to focus on two regions to compare biodiversity. These are United States and Australia. So, I would create an object 'dfbryozoa.countries' and filter data of only these two countries.
@@ -92,46 +105,71 @@ class(dfbryozoa.sp.rich)
 dfbryozoa.f.aus <- filter(dfbryozoa.sub, country %in% c('Australia'))
 
 #Now I will create an object 'bryozoa.aus.u.s' and will use unique function which will separate out unique species only.
-bryozoa.aus.u.s <- unique(dfbryozoa.f.aus$species_name)
-length(bryozoa.aus.u.s)
-bryozoa.aus.na <- unique(na.omit(bryozoa.aus.u.s))
-bryozoa.aus.na
-length(bryozoa.aus.na)
-class(bryozoa.aus.na)
-#Above analysis shows that Initially there were 15 unique no of species but after removing NA it becomes 14.
+#Use created function UniqueTotal to find the total unique species names in the data set dfbryozoa.f.aus. This function reduced 5 lines of code to 1 lines of code.
+UniqueTotal(dfbryozoa.f.aus$species_name)
 
-#Now we will do further analysis. I have created an object 'bryozoa.div.aus' which will contain only species analysed from Australia So, I have created an object 'bryozoa.div.aus1' in which NA's are removed and then diversity is calculated.
-bryozoa.div.aus <- (dfbryozoa.australia$species_name)
-bryozoa.div.aus1 <- (na.omit(bryozoa.div.aus))
-bryozoa.div.ausT <- table(bryozoa.div.aus1)
 
-diversity(bryozoa.div.ausT, index = 'shannon')
+#Above analysis shows that there are 14 unique species.
+
+#Now we will do further analysis by calculating the Shannon index of Australia. 
+
+#Creating a function that will return the Shannon index. This will reduce the amount of code when it is used later in the script. 
+ShanIndex <- function(df){
+  #Create a variable that removes NAs from the data, and organizes that data into a table.
+  #df = data frame. Use data frame with an extracted / specified column.
+  answer <- table((na.omit(df))) %>%
+    #use the diversity function from the package "vegan" to create a shannon index for the data frame of interest. 
+    diversity(df, index = 'shannon')
+  #Return the answer the the console.
+  return(answer)
+}
+
+#Use created function. Gives the same answer as the original code. 
+ShanIndex(dfbryozoa.australia$species_name)
+
 
 #It gives the abundance of species from what was sampled from Australia. Total number of species are 14 and the shannon diversity index of the species sampled in Australia is 1.367.In addition to this and to make this result more logical in terms of comparison of biodiversity, I am converting this value of shannon index into effective number of species(ENS) and for that I am using function exp()
 exp(1.3677)
 #It shows value 3, which means that a community with shannon index of 1.3677 is as diverse as a community with 3 equally common species. 
 
 #Now we will plot number of species of Australia against their frequency.
-hist(bryozoa.div.ausT, xlab = 'Frequency', ylab = 'No. of species' , main = 'Histogram of species of Australia', border = 'red', col = 'light blue', breaks = 10)
-#The histogram shows that 10-12 no of species are found in the range of 0-10 but (only two species 'Mucropetraliella ellerii' found 51 times and only 'Bugula neritina' found 94 times).
+
+#Create an advanced figure using ggplot to make a barplot representing frequency of species.
+
+#Create a variable that subsets species names and countries while filtering out NA values. 
+dfbryozoa.subAusUSA <- dfbryozoa.sub[!is.na(dfbryozoa.sub$species_name) & !is.na(dfbryozoa.sub$country), ]
+
+##Create a variable that subsets only Australia. Group the data by country and count the frequency of each species name.
+dfbryozoaAus1 <- dfbryozoa.subAusUSA[dfbryozoa.subAusUSA$country == "Australia", ] %>%
+  group_by(country) %>%
+  dplyr::count(species_name)
+
+#Plot the species frequency for Australia using ggplot.
+ggplot(dfbryozoaAus1) +
+  aes(x = reorder(species_name, -n), y = n,) +
+  geom_bar(position = "dodge", stat = "identity", colour = "black", fill = "orange") +
+  geom_text(aes(label = n), vjust = 1, hjust = -0.3, size = 4, nudge_x = 0.20) +
+  labs(title = "Species Frequency of Bryozoa in Australia", x = "Species", y = "Frequency") +
+  theme(axis.text.x = element_text(hjust = 0.5)) +
+  coord_flip()
+
+#The barplot shows that most species are found in the range of 0-10, except Mucropetraliella ellerii which was found 51 times and Bugula neritina which was found 94 times.
 
 #Now I will create object to analyze that how much unique no of species are there in the data collected from United States.
 bryozoa.US <- filter(dfbryozoa.sub, country %in% c('United States'))
-bryozoa.US.1 <- unique(bryozoa.US$species_name)
-length(bryozoa.US.1)
-bryozoa.US.2 <- unique(na.omit(bryozoa.US.1))
-length(bryozoa.US.2)
-class(bryozoa.US.2)
+class(bryozoa.US)
 
-#This tells us that if we look at the data of US then we came to know that there are 67 total unique species among the collected samples and after removing NA it becomes 66.
+#Use created function UniqueTotal to find the number of unique species in the United States. 
+UniqueTotal(bryozoa.US$species_name)
 
-#Now we will do further analysis. I have created an object 'bryozoa.div.us' which will contain only species analysed from US So, I have created an object 'bryozoa.div.us1' in which NA's are removed and then diversity is calculated.
-bryozoa.div.us <- (bryozoa.US$species_name)
-bryozoa.div.us1 <- (na.omit(bryozoa.div.us))
-bryozoa.div.usT <- table(bryozoa.div.us1)
-sum(bryozoa.div.usT)
+#This tells us that if we look at the data of US that there are 66 total unique species.
 
-diversity(bryozoa.div.usT,index = 'shannon')
+#Now we will do further analysis by looking at the Shannon index of species in the United States.
+
+#Use created function ShanIndex to reduce the amount of code. Simplifies script for repeating blocks of code.
+ShanIndex(bryozoa.US$species_name)
+
+
 #It gives the abundance of species from what was sampled from United States. Total number of species are 66 and the shannon diversity index of the species sampled in US is 2.679 which shows that United States have rich biodiversity as compared to australia. Moreover, to make this result more logical in terms of comparison of biodiversity, I am converting this value of shannon index into effective number of species(ENS) and for that I am using function exp()
 exp(2.679)
 #It shows value 14, which means that a community with Shannon index of 2.679 is as diverse as a community with 14 equally common species.
@@ -140,9 +178,23 @@ exp(2.679)
 
 ##Now we will plot number of species of United States against their frequency.
 
-hist(bryozoa.div.usT, xlab = 'Frequency', ylab = 'No. of species' , main = 'Histogram of species of United
-States', border = 'red', col = 'light blue', breaks = 8)
-#The above histogram shows near about 60 species are found in the range of 1-50, but only two species'Watersipora subtorquata' found 85 times and only 'Bugula neritina' found almost 226 times.
+#Creating an advanced figure using ggplot to show the species frequency.
+
+#Create a variable that subsets only the United States. Group the data by country and count the frequency of each species name. 
+dfbryozoaUSA1 <- dfbryozoa.subAusUSA[dfbryozoa.subAusUSA$country == "United States", ] %>%
+  group_by(country) %>%
+  dplyr::count(species_name)
+
+#Plot the species frequency in the United states using ggplot.
+ggplot(dfbryozoaUSA1) +
+  aes(x = reorder(species_name, -n), y = n) +
+  geom_bar(position = "dodge", stat = "identity", colour = "black", fill = "red") +
+  geom_text(aes(label = n), vjust = 1, hjust = -0.3, size = 4, nudge_x = 0.65) +
+  labs(title = "Species Frequency of Bryozoa in the United States", x = "Species", y = "Frequency") +
+  theme(axis.text.x = element_text(hjust = 0.5)) +
+  coord_flip()
+
+#The above barplot shows that most species have a frequency of 1-50, except Watersipora subtorquata which was found 85 times and Bugula neritina which was found 226 times.
 
 ###Now I will construct rarefaction curves for species of both Australia and US and will do comparison between them that which region is well sampled.
 
@@ -150,7 +202,7 @@ States', border = 'red', col = 'light blue', breaks = 8)
 
 dfCount.species.aus <- dfbryozoa.australia %>%
   group_by(species_name) %>%
-  count(species_name)
+  dplyr::count(species_name)
 
 #Now 'dfcount.species.aus' has all the data which I need for further analysis. So, I am just re-structuring this data by using the spread() function, so that the species names will become column headers and to this new object I am assigning name 'df.species.sp.aus'
 df.species.sp.aus <- spread(data = dfCount.species.aus, key = species_name, value = n)
@@ -164,7 +216,7 @@ rarefac.curve.aus <- rarecurve(df.species.sp.aus, xlab = "Individuals", ylab = "
 ##now, to analyse that how well sampled is the region of United States from the data frame. I will construct rarefaction curve that will represent sampled species from US. For that, I am creating an object 'dfcount.species.US' and grouping it by species name. 
 dfCount.species.US <- dfbryozoa.US %>%
   group_by(species_name) %>%
-  count(species_name)
+  dplyr::count(species_name)
 
 #Now 'dfcount.species.US' has all the data which I need for further analysis. So, I am just re-structuring this data by using the spread() function, so that the species names will become column headers and to this new object I am assigning name 'df.species.sp.US'
 
@@ -178,9 +230,35 @@ rarefac.curv.US <- rarecurve(df.species.sp.US, xlab = "Individuals", ylab = "No.
 
 #By looking at the shape of this curve we can say that after 300 individuals on the x-axis it becomes considerably linear and might be nearing plateau, which means that new discoveries can be made but asignificant amount and new samples do have the potential to reveal a bit more but not to a great extent.Therefore, we can say that region of United States is well sampled as compared to Australia.
 
+#####Additional analysis. 
+#Create a variable that subsets the original dataframe and includes country, latitude, and longitude. 
+dfbryozoa.sub2 <- dfbryozoa[, c("country", "lat", "lon")]
+
+#Create a new variable that indexes country on the dataframe subset, and makes the variables exactly equal to Australia OR the Unites States.
+dfbyozoaAusUSAGeo <- dfbryozoa.sub2[dfbryozoa.sub2$country == "Australia" | dfbryozoa.sub2$country == "United States", ]
+
+#Filter out NAs from the lat and lon values.
+AusUSABryozoa <- dfbyozoaAusUSAGeo %>%
+  filter(!is.na(lat)) %>%
+  filter(!is.na(lon))
+
+#Use a summary to see the min and max values of longitude and latitude to make appropriate scales for the plot.
+summary(AusUSABryozoa)
+
+#Plot longitudes and latitudes of Bryozoa collections points from Australia and the United States.
+ggplot(AusUSABryozoa) +
+  aes(x = lon, y = lat, colour = country, shape = country) +
+  geom_point(stat = "identity") +
+  xlim(c(-180, 190)) +
+  ylim(c(-70, 65)) +
+  labs(title = "Longitude vs. Latitude of Sample Collection of Bryozoa from Australia and the United States", x = "Longitude", y = "Latitude") +
+  guides(colour = guide_legend("Country"), shape = guide_legend("Country"))
+
+#Create new variable that creates a world map. This map will help clarify what the scatterplot shows. 
+MapPlot <- getMap(resolution = "low")
+#Plot the world map.
+plot(MapPlot, main = "Collection Points of Bryozoa in Australia and the United States") 
+#Add longitude and latitude points to the map. 
+points(AusUSABryozoa$lon, AusUSABryozoa$lat, pch = 21, col = "red", bg = "red", cex = .8)
 
 #Conclusion: The above analysis does not directly support the hypothesis that Australia is has less diversity of Bryozoa species due to changes Southern Ocean environment in terms of like physical disturbance, seasonal flux etc, although Ocean acidification is a concern for calcifying organisms like bryozoa but not only this there can be lot of factors that contribute towards low biodiversity of benthnic (bryozoa) species in Australia. Furthermore, it is also calculated that which region is well sampled and it shows that United States ismore well sampled as compared to Australia and lot of more sampling is required in Australia for biodiversity analysis. 
-
-
-
-
